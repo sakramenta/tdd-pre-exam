@@ -11,3 +11,10 @@ Request 2.
     - if no comma in the line, return with an array with 1 element (the whole string) - DONE
     - use the convertLine to convert lines - DONE
     - data provider - DONE
+
+Request 3.
+    - create global convert method. rewrite the tests and the converter - DONE
+    - create hasLabels protected method - DONE
+    - create getLabels protected method - DONE
+    - create convertMultiLineWithLabels protected method - DONE
+    - data provider - DONE

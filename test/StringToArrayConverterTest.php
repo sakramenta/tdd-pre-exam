@@ -4,7 +4,7 @@ require __DIR__ . '/../src/StringToArrayConverter.php';
 
 class StringToArrayConverterTest extends PHPUnit_Framework_TestCase
 {
-	const TEST_LINE_WITHOUT_COMMA = 'This is a test line without comma';
+	const SINGLE_LINE_STRING_WITHOUT_COMMA = 'This is a test line without comma';
 
 	/**
 	 * @var StringToArrayConverter
@@ -16,7 +16,7 @@ class StringToArrayConverterTest extends PHPUnit_Framework_TestCase
 		$this->converter = new StringToArrayConverter();
 	}
 
-	public function convertLineDataProvider()
+	public function convertSingleLineDataProvider()
 	{
 		return array(
 			array(
@@ -61,12 +61,28 @@ class StringToArrayConverterTest extends PHPUnit_Framework_TestCase
 		);
 	}
 
-	/**
-	 * @dataProvider convertLineDataProvider
-	 */
-	public function testConvertLine($line, $expected)
+	public function convertMultiLineWithLabelsDataProvider()
 	{
-		$resultArray = $this->converter->convertLine($line);
+		return array(
+			array(
+				"#useFirstLineAsLabels\nName,Email,Phone\nMark,marc@be.com,998\nNoemi,noemi@ac.co.uk,888",
+				array(
+					'labels' => array('Name', 'Email', 'Phone'),
+					'data' => array(
+						array('Mark', 'marc@be.com', 998),
+						array('Noemi', 'noemi@ac.co.uk', 888),
+					),
+				),
+			),
+		);
+	}
+
+	/**
+	 * @dataProvider convertSingleLineDataProvider
+	 */
+	public function testConvertSingleLine($line, $expected)
+	{
+		$resultArray = $this->converter->convert($line);
 
 		$this->assertEquals($expected, $resultArray);
 	}
@@ -74,24 +90,24 @@ class StringToArrayConverterTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @expectedException InvalidArgumentException
 	 */
-	public function testConvertLineWithInvalidArgument()
+	public function testConvertWithInvalidArgument()
 	{
-		$this->converter->convertLine(new StdClass);
+		$this->converter->convert(new StdClass);
 	}
 
 	/**
 	 * @expectedException InvalidArgumentException
 	 */
-	public function testConvertLineWithEmptyArgument()
+	public function testConvertWithEmptyArgument()
 	{
-		$this->converter->convertLine('');
+		$this->converter->convert('');
 	}
 
-	public function testConvertLineWithValidArgumentWithoutComma()
+	public function testConvertSingeLineWithoutComma()
 	{
-		$resultArray = $this->converter->convertLine(self::TEST_LINE_WITHOUT_COMMA);
+		$resultArray = $this->converter->convert(self::SINGLE_LINE_STRING_WITHOUT_COMMA);
 
-		$this->assertEquals(array(self::TEST_LINE_WITHOUT_COMMA), $resultArray);
+		$this->assertEquals(array(self::SINGLE_LINE_STRING_WITHOUT_COMMA), $resultArray);
 	}
 
 	/**
@@ -99,31 +115,20 @@ class StringToArrayConverterTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testConvertMultiLine($multiLine, $expected)
 	{
-		$resultArray = $this->converter->convertMultiLine($multiLine);
+		$resultArray = $this->converter->convert($multiLine);
 
 		$this->assertEquals($expected, $resultArray);
 	}
 
 	/**
-	 * @expectedException InvalidArgumentException
+	 * @dataProvider convertMultiLineWithLabelsDataProvider
 	 */
-	public function testConvertMultiLineWithInvalidArgument()
+	public function testConvertMultiLineWithLabels($multiLine, $expected)
 	{
-		$this->converter->convertMultiLine(new StdClass);
-	}
+		$resultArray = $this->converter->convert($multiLine);
 
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	public function testConvertMultiLineWithEmptyArgument()
-	{
-		$this->converter->convertMultiLine('');
-	}
+		var_export($resultArray);
 
-	public function testConvertMultiLineWithOneLine()
-	{
-		$resultArray = $this->converter->convertMultiLine(self::TEST_LINE_WITHOUT_COMMA);
-
-		$this->assertEquals(array(array(self::TEST_LINE_WITHOUT_COMMA)), $resultArray);
+		$this->assertEquals($expected, $resultArray);
 	}
 }
