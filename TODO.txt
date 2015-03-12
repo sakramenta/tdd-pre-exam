@@ -3,3 +3,11 @@ Request 1.
     - exception if argument is not string or empty - DONE
     - if no comma, return with an array with 1 element (the whole string) - DONE
     - data provider! - DONE
+
+Request 2.
+    - function name: convertMultiLine() - DONE
+    - exception if is not string or empty - DONE
+    - if no new line, return with an array with 1 element - DONE
+    - if no comma in the line, return with an array with 1 element (the whole string) - DONE
+    - use the convertLine to convert lines - DONE
+    - data provider - DONE
