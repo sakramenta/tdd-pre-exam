@@ -1,0 +1,5 @@
+Request 1.
+    - function name: convertLine() - DONE
+    - exception if argument is not string or empty - DONE
+    - if no comma, return with an array with 1 element (the whole string) - DONE
+    - data provider! - DONE
